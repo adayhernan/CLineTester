@@ -1,4 +1,6 @@
 # CCcamTester scripts by Dagger
+(Also called Cline, CCcline, CCcam, Camd)
+
 Scripts for testing that a Cline works or not. Currently in C# and Python.
 
 I made them to PISS OFF those people that don't share their source code and host testing cline websites so they could steal them. (You REALLY suck guys)
