@@ -23,5 +23,10 @@ If you need more info, here are some links that helped me to do it:
   mirror code: https://drive.google.com/open?id=0B86c-awTf5xFQUlycG1nX2xmWXM
   
 There is still job to be done.
+
 1- Be able to test N lines of newcamd
+
 2- Fix the issue with the socket receive
+
+
+Please, don't be an asshat and share your code!
