@@ -11,66 +11,83 @@ namespace ConsoleApplication
         private static readonly CryptoBlock ReceiveBlock = new CryptoBlock();
         private static readonly CryptoBlock SendBlock = new CryptoBlock();
         private static readonly Socket Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        
-        
+
         static void Main(string[] args)
         {
-            var server = "my.ccamserver.com";
-            var port = 99999;
-            var username = "user";
-            var password = "passw";
-            
-            Socket.Connect(server, port);
+            var server = "fast3.mycccam24.com";
+            var port = 18200;
+            var username = "bqnhio";
+            var password = "mycccam24";
             try
             {
+                Socket.Connect(server, port);
+
                 var helloBytes = new byte[16];
                 Socket.Receive(helloBytes);
                 Console.WriteLine("Received hello: " + Encoding.UTF8.GetString(helloBytes));
 
-                if (CheckConnectionChecksum(helloBytes, 16))
+                if (!CheckConnectionChecksum(helloBytes, 16))
                 {
-                    CryptoBlock.cc_crypt_xor(helloBytes);
+                    throw new Exception("Wrong connection Checksum");
+                }
+                
+                CryptoBlock.cc_crypt_xor(helloBytes);
 
-                    SHA1 sha = new SHA1Managed();
-                    var sha1Hash = sha.ComputeHash(helloBytes);
+                SHA1 sha = new SHA1Managed();
+                var sha1Hash = sha.ComputeHash(helloBytes);
 
-                    ReceiveBlock.cc_crypt_init(sha1Hash, 20);
-                    ReceiveBlock.cc_decrypt(helloBytes, 16);
+                //Init receive cripto block
+                ReceiveBlock.cc_crypt_init(sha1Hash, 20);
+                ReceiveBlock.cc_decrypt(helloBytes, 16);
 
-                    SendBlock.cc_crypt_init(helloBytes, 16);
-                    SendBlock.cc_decrypt(sha1Hash, 20);
+                //Init send cripto block
+                SendBlock.cc_crypt_init(helloBytes, 16);
+                SendBlock.cc_decrypt(sha1Hash, 20);
 
-                    SendMsg(20, sha1Hash); //Handshake
+                SendMsg(20, sha1Hash); //Handshake
 
-                    byte[] userName = new byte[20];
-                    Array.Copy(GetBytes(username), userName, GetBytes(username).Length);
-                    SendMsg(20, userName);
+                byte[] userName = new byte[20];
+                Array.Copy(GetBytes(username), userName, GetBytes(username).Length);
+                SendMsg(20, userName); //Send username in a padded array of 20 bytes
 
-                    byte[] pwd = new byte[63];
-                    Array.Copy(GetBytes(password), userName, GetBytes(password).Length);
-                    SendBlock.cc_encrypt(pwd, pwd.Length);
+                byte[] pwd = new byte[63];
+                Array.Copy(GetBytes(password), userName, GetBytes(password).Length);
+                SendBlock.cc_encrypt(pwd, pwd.Length); //encript psw in cripto block
 
-                    byte[] cCcam = new byte[6];
-                    Array.Copy(GetBytes("CCcam"), cCcam, GetBytes("CCcam").Length);
-                    SendMsg(6, cCcam);
+                byte[] cCcam = new byte[6];
+                Array.Copy(GetBytes("CCcam"), cCcam, GetBytes("CCcam").Length);
+                SendMsg(6, cCcam); //Send "CCcam" with password encripted block
 
+                try
+                {
                     byte[] receiveBytes = new byte[20];
-                    Socket.Receive(receiveBytes, 20, SocketFlags.None);
-                    ReceiveBlock.cc_decrypt(receiveBytes, 20);
+                    var recvCount = Socket.Receive(receiveBytes);
 
-                    Console.WriteLine(Encoding.Default.GetString(receiveBytes) == "CCcam"
-                        ? "SUCCESS!"
-                        : "NO ACK received!");
-                    //I don't understand why the ACK is not received...
+                    if (recvCount > 0) //I don't understand why it's always 0...
+                    {
+                        ReceiveBlock.cc_decrypt(receiveBytes, 20);
+
+                        Console.WriteLine(Encoding.Default.GetString(receiveBytes) == "CCcam"
+                            ? "SUCCESS!"
+                            : "Wrong ACK received!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("NO ACK received!");
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Wrong username/password");
                 }
             }
-            catch (SocketException e)
+            catch (Exception)
             {
-                Console.WriteLine("{0} Error code: {1}.", e.Message, e.ErrorCode);
+                Console.WriteLine("Failed to connect");
             }
             Socket.Close();
         }
-
+        
         private static bool CheckConnectionChecksum(byte[] buf, int len)
         {
             if (len == 16)
@@ -85,31 +102,26 @@ namespace ConsoleApplication
             }
             return false;
         }
-
-        static byte[] GetBytes(string str)
+        private static byte[] GetBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
             Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return Encoding.ASCII.GetBytes(str);
         }
 
-        static int SendMsg(int len, byte[] buf)
+        private static void SendMsg(int len, byte[] data)
         {
-            byte[] netbuf = new byte[len];
-            Array.Copy(buf, 0, netbuf, 0, len);
-            SendBlock.cc_encrypt(netbuf, len);
+            SendBlock.cc_encrypt(data, len);
 
             try
             {
-                Socket.Send(netbuf);
-                return len;
+                Socket.Send(data);
             }
             catch (IOException e)
             {
                 Console.WriteLine("Connection closed while sending");
                 Socket.Close();
             }
-            return -1;
         }
     }
 }
