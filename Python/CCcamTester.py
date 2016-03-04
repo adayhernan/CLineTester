@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
 
-import CriptBlock
 
-recvblock = CriptBlock.ccCryptBlock()
-sendblock = CriptBlock.ccCryptBlock()
+import CriptoBlock
+
+recvblock = CriptoBlock.CryptographicBlock()
+sendblock = CriptoBlock.CryptographicBlock()
 
 def TestCline(cline):
     import socket, re, sys, array, time
@@ -45,13 +46,10 @@ def TestCline(cline):
             return
 
         receivedBytes = bytearray(20)
-        byteCount = 0
-        for i in range(0, 5):
-            byteCount = testSocket.recv_into(receivedBytes, 20)
-            if byteCount > 0: break
-            else: time.sleep(1)      
-    
-        if (byteCount > 0):
+        testSocket.recv_into(receivedBytes, 20)
+        recvblock.Decrypt(receivedBytes, 20)
+
+        if (receivedBytes == "CCcam"):
             print "SUCCESS! working cline: " + cline + " bytes: " + receivedBytes
         else:
             print "No ACK for cline: " + cline        
@@ -89,13 +87,13 @@ def GetPaddedPassword(password):
     return passwordByteArray
     
 def DoHanshake(socket):
-    import hashlib, array, CriptBlock
+    import hashlib, array, CriptoBlock
 
     random = bytearray(16)
     socket.recv_into(random, 16) #Receive first 16 "Hello" random bytes
     print "Hello bytes: " + random
 
-    random = CriptBlock.Xor(random); #Do a Xor with "CCcam" string to the hello bytes
+    random = CriptoBlock.Xor(random); #Do a Xor with "CCcam" string to the hello bytes
 
     sha1 = hashlib.sha1()
     sha1.update(random)
