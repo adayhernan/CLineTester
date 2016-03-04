@@ -12,6 +12,7 @@ If you need more info, here are some links that helped me to do it:
 
 1- Some unfinished script in PHP:
   http://pastebin.com/apdmS1Be
+  mirror: http://pastebin.com/JByfivxH
   
 2- The code of Oscam
   https://github.com/gfto/oscam/blob/253d099e7581e186432acea2b509bebd9daeffce/module-cccam.c#L43
