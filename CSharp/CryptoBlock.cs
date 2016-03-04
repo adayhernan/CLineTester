@@ -2,7 +2,6 @@ namespace ConsoleApplication
 {
     public class CryptoBlock
     {
-
         byte[] keytable;
         byte state;
         byte counter;
@@ -81,6 +80,5 @@ namespace ConsoleApplication
                 state = (byte) (state ^ z);
             }
         }
-
     }
 }
