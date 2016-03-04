@@ -9,7 +9,7 @@ def Xor(buf):
             buf[i] ^= ord(cccam[i])
     return buf
 
-class ccCryptBlock(object):
+class CryptographicBlock(object):
     def __init__(self):
         self._keytable = [0] * 256
         self._state = 0
