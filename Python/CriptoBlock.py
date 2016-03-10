@@ -33,11 +33,11 @@ class CryptographicBlock(object):
             self._sum = self._sum + self._keytable[self._counter]
 
             #Swap keytable[counter] with keytable[sum]
-            self._keytable[self._counter & 0xFF], self._keytable[self._sum & 0xFF] = \
-                self._keytable[self._sum & 0xFF], self._keytable[self._counter & 0xFF]
+            self._keytable[self._counter], self._keytable[self._sum & 0xFF] = \
+                self._keytable[self._sum & 0xFF], self._keytable[self._counter]
 
             z = data[i]
-            data[i] = z ^ self._keytable[(self._keytable[self._counter & 0xFF] + \
+            data[i] = z ^ self._keytable[(self._keytable[self._counter] + \
                 self._keytable[self._sum & 0xFF]) & 0xFF] ^ self._state
             z = data[i]
             self._state = 0xff & (self._state ^ z)
@@ -48,8 +48,8 @@ class CryptographicBlock(object):
             self._sum = self._sum + self._keytable[self._counter]
             
             #Swap keytable[counter] with keytable[sum]
-            self._keytable[self._counter & 0xFF], self._keytable[self._sum & 0xFF] = \
-                self._keytable[self._sum & 0xFF], self._keytable[self._counter & 0xFF]
+            self._keytable[self._counter], self._keytable[self._sum & 0xFF] = \
+                self._keytable[self._sum & 0xFF], self._keytable[self._counter]
 
             z = data[i]
             data[i] = z ^ self._keytable[(self._keytable[self._counter & 0xFF] + \
