@@ -2,42 +2,42 @@ namespace ConsoleApplication
 {
     public class CryptoBlock
     {
-        byte[] keytable;
-        byte state;
-        byte counter;
-        byte sum;
+        private readonly int[] _keytable;
+        private int _state;
+        private int _counter;
+        private int _sum;
 
         public CryptoBlock()
         {
-            keytable = new byte[256];
-            counter = 0;
-            sum = 0;
+            _keytable = new int[256];
+            _state = 0;
+            _counter = 0;
+            _sum = 0;
         }
 
         public void cc_crypt_init(byte[] key, int len)
         {
-            for (var i = 0; i < 256; i++) keytable[i] = (byte)i;
-
-            byte j = 0;
-            for (var i = 0; i < 256; i++)
+            int i;
+            for (i = 0; i < 256; i++) _keytable[i] = i;
+            int j = 0;
+            for (i = 0; i < 256; i++)
             {
-                j += (byte)(key[i % len] + keytable[i]);
-
+                j = 0xff & (j + key[i % len] + _keytable[i]);
                 // Swap
-                var k = keytable[i];
-                keytable[i] = keytable[j];
-                keytable[j] = k;
+                int k = _keytable[i];
+                _keytable[i] = _keytable[j];
+                _keytable[j] = k;
             }
 
-            state = key[0];
-            counter = 0;
-            sum = 0;
+            _state = key[0];
+            _counter = 0;
+            _sum = 0;
         }
 
         public static void cc_crypt_xor(byte[] data)
         {
-            var cccam = "CCcam";
-            for (byte i = 0; i < 8; i++)
+            string cccam = "CCcam";
+            for (sbyte i = 0; i < 8; i++)
             {
                 data[8 + i] = (byte)(i * data[i]);
                 if (i < 5) data[i] ^= (byte)cccam[i];
@@ -48,17 +48,16 @@ namespace ConsoleApplication
         {
             for (int i = 0; i < len; i++)
             {
-                counter++;
-                sum += keytable[counter];
+                _counter = 0xff & (_counter + 1);
+                _sum += _keytable[_counter];
 
-                //Swap
-                var k = keytable[counter];
-                keytable[counter] = keytable[sum];
-                keytable[sum] = k;
+                sbyte k = (sbyte)_keytable[_counter];
+                _keytable[_counter] = _keytable[_sum & 0xFF];
+                _keytable[_sum & 0xFF] = k;
 
-                var z = data[i];
-                data[i] = (byte)(z ^ keytable[keytable[counter] + keytable[sum] & 0xFF] ^ state);
-                state = (byte) (state ^ z);
+                sbyte z = (sbyte)data[i];
+                data[i] = (byte)(z ^ _keytable[_keytable[_counter & 0xFF] + _keytable[_sum & 0xFF] & 0xFF] ^ _state);
+                _state = 0xff & (_state ^ z);
             }
         }
 
@@ -66,19 +65,20 @@ namespace ConsoleApplication
         {
             for (int i = 0; i < len; i++)
             {
-                counter++;
-                sum += keytable[counter];
+                _counter = 0xff & (_counter + 1);
+                _sum += _keytable[_counter];
 
-                //Swap
-                var k = keytable[counter];
-                keytable[counter] = keytable[sum];
-                keytable[sum] = k;
+                sbyte k = (sbyte)_keytable[_counter];
+                _keytable[_counter] = _keytable[_sum & 0xFF];
+                _keytable[_sum & 0xFF] = k;
 
-                var z = data[i];
-                data[i] = (byte)(z ^ keytable[keytable[counter] + keytable[sum] & 0xFF] ^ state);
-                z = data[i];
-                state = (byte) (state ^ z);
+                sbyte z = (sbyte)data[i];
+                data[i] = (byte)(z ^ _keytable[_keytable[_counter] + _keytable[_sum & 0xFF] & 0xFF] ^ _state);
+                z = (sbyte)data[i];
+                _state = 0xff & (_state ^ z);
             }
         }
     }
 }
+
+
