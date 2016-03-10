@@ -6,7 +6,8 @@ Scripts for testing that a Cline works or not. Currently in Java, C# and Python.
 I made them as some people host testing cline websites and reject to share their source code.
 
 ATENTION - Currently the socket does not receive the ACK in C# and Python. 
-Hope to fix it soon, but all the login process works fine as the connection is not closed.
+Hope to fix it soon, but all the login process works fine as the connection is not closed... Probably the issue is in the ecnription of the password.
+FORTUNATELY it works in Java so maybe you can help me and adapt it....
 
 If you need more info, here are some links that helped me to do it:
 
