@@ -26,6 +26,6 @@ If you need more info, here are some links that helped me to do it:
   
 There is still job to be done.
 
-Check this repository for a Nline tester: https://github.com/DaggerES/NLineTester
+Check this repository for a Nline (newcamd) tester: https://github.com/DaggerES/NLineTester
 
 Please, share your code!
