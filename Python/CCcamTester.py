@@ -46,17 +46,16 @@ def TestCline(cline):
 
             if recvCount > 0:
                 recvblock.Decrypt(receivedBytes, 20)
-                if (receivedBytes == "CCcam"):
+                if (receivedBytes.decode("ascii").rstrip('\0') == "CCcam"):
                     testSocket.close()
-                    print "SUCCESS! working cline: " + cline + " bytes: " + receivedBytes
+                    print "SUCCESS! working cline: " + cline
                     returnValue = True
                 else:
-                    returnValue = False
                     print "Wrong ACK received!"
+                    returnValue = False
             else:
-                print "No ACK for cline: " + cline
-                returnValue = True #This should return false but we never receive data...
-                #returnValue =  False #Why it never receives any data????!!!!!
+                print "Bad username/password for cline: " + cline
+                returnValue = False
 
         except:
             print "Bad username/password for cline: " + cline
@@ -88,10 +87,10 @@ def GetCcam():
 def GetPaddedPassword(password):
     import array
 
-    #We create an array of 63 bytes with the password in it as bytes and padded with 0 behind
-    #Like: [23,33,64,13,0,0,0,0,0,0,0...]
+    #We create an array of with the password in it as bytes
+    #Like: [23,33,64,13,48,78,45]
     passwordBytes = array.array("B", password)
-    passwordByteArray = FillArray(bytearray(63),passwordBytes)
+    passwordByteArray = FillArray(bytearray(len(password)),passwordBytes)
 
     return passwordByteArray
     
