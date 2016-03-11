@@ -1,4 +1,4 @@
-# CCcamTester scripts
+# CLine tester scripts
 (Also called Cline, CCcline, CCcam, Camd)
 
 Scripts for testing that a Cline works or not. Currently in Java, C# and Python.
