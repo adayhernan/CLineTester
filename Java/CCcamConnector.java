@@ -53,9 +53,9 @@ public class CCcamConnector {
 						
 	  	CryptoBlock.cc_crypt_xor(helloBytes);  // XOR init bytes with 'CCcam'
 
-	    MessageDigest md;
-	    md = MessageDigest.getInstance("SHA-1");
-	    byte[] sha1hash = new byte[20];
+	    	MessageDigest md;
+		md = MessageDigest.getInstance("SHA-1");
+		byte[] sha1hash = new byte[20];
 		sha1hash = md.digest(helloBytes);		
 
 		recvblock = new CryptoBlock();
@@ -68,11 +68,11 @@ public class CCcamConnector {
 		
 		SendMsg(20, sha1hash );//send crypted hash to server
 		
-	    byte[] userBuf = new byte[20];
+	    	byte[] userBuf = new byte[20];
 		System.arraycopy(user.getBytes(), 0, userBuf, 0, user.length());
 		SendMsg(20, userBuf);//send username to server	
 		
-		byte[] pwd = new byte[63];
+		byte[] pwd = new byte[password.length()];
 		System.arraycopy(password.getBytes(), 0, pwd, 0, password.length());
 		sendblock.cc_encrypt(pwd, password.length()); //encript the password
 		
@@ -80,7 +80,7 @@ public class CCcamConnector {
 		SendMsg(6, CCcam); //But send CCcam\0
 
 		byte[] rcvBuf = new byte[20];
-	    is.read(rcvBuf);
+	    	is.read(rcvBuf);
 		recvblock.cc_decrypt(rcvBuf, 20); 
 		//received string after decription equals "CCcam"
 		if ( Arrays.equals(CCcam, Arrays.copyOf(rcvBuf,6) ) ) {
