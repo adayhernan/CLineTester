@@ -5,10 +5,6 @@ Scripts for testing that a Cline works or not. Currently in Java, C# and Python.
 
 I made them as some people host testing cline websites and reject to share their source code.
 
-ATENTION - Currently the socket does not receive the ACK in C# and Python. 
-Hope to fix it soon, but all the login process works fine as the connection is not closed... Probably the issue is in the ecnription of the password.
-FORTUNATELY it works in Java so maybe you can help me and adapt it....
-
 If you need more info, here are some links that helped me to do it:
 
 1- Some unfinished script in PHP:
@@ -30,7 +26,6 @@ If you need more info, here are some links that helped me to do it:
   
 There is still job to be done.
 
-1- Fix the issue with the socket receive in C# and Python
-2- Be able to test N lines of newcamd
+---- Be able to test N lines of newcamd
 
 Please, share your code!
