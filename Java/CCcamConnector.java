@@ -29,29 +29,20 @@ public class CCcamConnector {
     os = new BufferedOutputStream(socket.getOutputStream());
   }
 
-  
-  public static int[] unsignedToBytes(byte[] b) {
-	  int[] unsigned = new int[b.length];
-	  for (int i = 0; i< b.length; i++)		  
-		  unsigned[i] =  b[i] & 0xFF;
-  		return unsigned;
-  }
-  
   public synchronized int SendMsg(int len, byte[] buf) throws IOException {
-	  	byte[] netbuf;
-		netbuf = new byte[len];
-		System.arraycopy(buf, 0, netbuf, 0, len);
-		sendblock.cc_encrypt(netbuf, len);
-		
-		try {
-			int[] t = unsignedToBytes(netbuf);
-		  os.write(netbuf);
-		  os.flush();        
-		  return len;
-		} catch(IOException e) {
-		  socket.close();
-		}
-		return -1;
+  	byte[] netbuf;
+	netbuf = new byte[len];
+	System.arraycopy(buf, 0, netbuf, 0, len);
+	sendblock.cc_encrypt(netbuf, len);
+	
+	try {
+	  os.write(netbuf);
+	  os.flush();        
+	  return len;
+	} catch(IOException e) {
+	  socket.close();
+	}
+	return -1;
   }
 
   public boolean TestCline() throws Exception {
