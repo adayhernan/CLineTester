@@ -14,10 +14,10 @@ namespace ConsoleApplication
 
         static void Main(string[] args)
         {
-            var server = "fast3.mycccam24.com";
-            var port = 18200;
-            var username = "bqnhio";
-            var password = "mycccam24";
+            var server = "srv.server.com";
+            var port = 9999;
+            var username = "user";
+            var password = "pass";
             try
             {
                 Socket.Connect(server, port);
@@ -50,12 +50,12 @@ namespace ConsoleApplication
                 Array.Copy(GetBytes(username), userName, GetBytes(username).Length);
                 SendMsg(20, userName); //Send username in a padded array of 20 bytes
 
-                byte[] pwd = new byte[63];
+                byte[] pwd = new byte[password.Length];
                 Array.Copy(GetBytes(password), userName, GetBytes(password).Length);
                 SendBlock.cc_encrypt(pwd, pwd.Length); //encript psw in cripto block
 
-                byte[] cCcam = new byte[6];
-                Array.Copy(GetBytes("CCcam"), cCcam, GetBytes("CCcam").Length);
+                byte[] cCcam = { Convert.ToByte('C'), Convert.ToByte('C'), Convert.ToByte('c'),
+                    Convert.ToByte('a'), Convert.ToByte('m'), 0 };
                 SendMsg(6, cCcam); //Send "CCcam" with password encripted block
 
                 try
@@ -63,17 +63,17 @@ namespace ConsoleApplication
                     byte[] receiveBytes = new byte[20];
                     var recvCount = Socket.Receive(receiveBytes);
 
-                    if (recvCount > 0) //I don't understand why it's always 0...
+                    if (recvCount > 0)
                     {
                         ReceiveBlock.cc_decrypt(receiveBytes, 20);
 
-                        Console.WriteLine(Encoding.Default.GetString(receiveBytes) == "CCcam"
+                        Console.WriteLine(Encoding.Default.GetString(receiveBytes).Replace("\0", "") == "CCcam"
                             ? "SUCCESS!"
                             : "Wrong ACK received!");
                     }
                     else
                     {
-                        Console.WriteLine("NO ACK received!");
+                        Console.WriteLine("Wrong username/password");
                     }
                 }
                 catch (Exception)
