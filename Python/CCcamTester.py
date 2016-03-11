@@ -52,9 +52,9 @@ def TestCline(cline):
                     return False
                     print "Wrong ACK received!"
             else:
+                print "No ACK for cline: " + cline
                 return True #This should return false but we never receive data...
                 return False #Why it never receives any data????!!!!!
-                print "No ACK for cline: " + cline
 
         except:
             print "Bad username/password for cline: " + cline
