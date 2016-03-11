@@ -9,6 +9,7 @@ sendblock = CriptoBlock.CryptographicBlock()
 def TestCline(cline):
     import socket, re, sys, array, time, select
 
+    returnValue = False
     regExpr = re.compile('[C]:\s*(\S+)+\s+(\d*)\s+(\S+)\s+([\w.-]+)')
     match = regExpr.search(cline)
 
@@ -31,38 +32,40 @@ def TestCline(cline):
 
         try:
             userArray = GetPaddedUsername(username)
-            rcount = SendMessage(userArray, len(userArray), testSocket)
+            sendcount = SendMessage(userArray, len(userArray), testSocket)
             
             passwordArray = GetPaddedPassword(password)
             sendblock.Encrypt(passwordArray, len(passwordArray)) #We encript the password
     
             #But we send "CCCam" with the password encripted CriptoBlock
             cccamArray = GetCcam()
-            rcount = SendMessage(cccamArray, len(cccamArray), testSocket) 
-        
+            sendcount = SendMessage(cccamArray, len(cccamArray), testSocket)
+
             receivedBytes = bytearray(20)
             recvCount = testSocket.recv_into(receivedBytes, 20)
 
             if recvCount > 0:
                 recvblock.Decrypt(receivedBytes, 20)
                 if (receivedBytes == "CCcam"):
+                    testSocket.close()
                     print "SUCCESS! working cline: " + cline + " bytes: " + receivedBytes
-                    return True
+                    returnValue = True
                 else:
-                    return False
+                    returnValue = False
                     print "Wrong ACK received!"
             else:
                 print "No ACK for cline: " + cline
-                return True #This should return false but we never receive data...
-                return False #Why it never receives any data????!!!!!
+                returnValue = True #This should return false but we never receive data...
+                #returnValue =  False #Why it never receives any data????!!!!!
 
         except:
             print "Bad username/password for cline: " + cline
-            return
+            returnValue = False
     except:
         print "Error while connecting to cline: " + cline
 
     testSocket.close()
+    return returnValue
 
 def GetPaddedUsername(userName):
     import array
@@ -77,9 +80,9 @@ def GetPaddedUsername(userName):
 def GetCcam():
     import array
 
-    #We create an array of 5 bytes with the "CCcam" in it as bytes
-    cccamBytes = array.array("B", "CCcam")    
-    cccamByteArray = FillArray(bytearray(5), cccamBytes)
+    #We create an array of 6 bytes with the "CCcam\0" in it as bytes
+    cccamBytes = array.array("B", "CCcam") 
+    cccamByteArray = FillArray(bytearray(6), cccamBytes)
     return cccamByteArray
 
 def GetPaddedPassword(password):
