@@ -30,6 +30,13 @@ public class CCcamConnector {
   }
 
   
+  public static int[] unsignedToBytes(byte[] b) {
+	  int[] unsigned = new int[b.length];
+	  for (int i = 0; i< b.length; i++)		  
+		  unsigned[i] =  b[i] & 0xFF;
+  		return unsigned;
+  }
+  
   public synchronized int SendMsg(int len, byte[] buf) throws IOException {
 	  	byte[] netbuf;
 		netbuf = new byte[len];
@@ -37,6 +44,7 @@ public class CCcamConnector {
 		sendblock.cc_encrypt(netbuf, len);
 		
 		try {
+			int[] t = unsignedToBytes(netbuf);
 		  os.write(netbuf);
 		  os.flush();        
 		  return len;
@@ -46,56 +54,58 @@ public class CCcamConnector {
 		return -1;
   }
 
-  public void serverHandshake(byte[] random16) throws IOException, NoSuchAlgorithmException {
-	  	is.readFully(random16);
-	  	CryptoBlock.cc_crypt_xor(random16);  // XOR init bytes with 'CCcam'
+  public boolean TestCline() throws Exception {
+    try {
+    	
+	  	byte[] helloBytes = new byte[16];
+		is.readFully(helloBytes);
+						
+	  	CryptoBlock.cc_crypt_xor(helloBytes);  // XOR init bytes with 'CCcam'
 
 	    MessageDigest md;
 	    md = MessageDigest.getInstance("SHA-1");
-	    byte[] sha1hash = new byte[40];
-	    md.update( random16 );
-		sha1hash = md.digest();
+	    byte[] sha1hash = new byte[20];
+		sha1hash = md.digest(helloBytes);		
 
-		//init crypto states
 		recvblock = new CryptoBlock();
 		recvblock.cc_crypt_init(sha1hash, 20);
-		recvblock.cc_decrypt(random16, 16);
+		recvblock.cc_decrypt(helloBytes, 16);
 		
 		sendblock = new CryptoBlock();
-		sendblock.cc_crypt_init(random16, 16);
+		sendblock.cc_crypt_init(helloBytes, 16);
 		sendblock.cc_decrypt(sha1hash, 20);
 		
-		SendMsg(20, sha1hash );   // send crypted hash to server
-	  }
-
-  public void run() {
-    try {
-    	byte[] random16 = new byte[16];
-    	serverHandshake(random16);    	
-
-	    byte[] buf = new byte[20];
-		System.arraycopy(user.getBytes(), 0, buf, 0, user.length() );
-		SendMsg(20, buf );		
+		SendMsg(20, sha1hash );//send crypted hash to server
+		
+	    byte[] userBuf = new byte[20];
+		System.arraycopy(user.getBytes(), 0, userBuf, 0, user.length());
+		SendMsg(20, userBuf);//send username to server	
 		
 		byte[] pwd = new byte[63];
-		System.arraycopy(password.getBytes(), 0, pwd, 0, password.length() );
-		sendblock.cc_encrypt( pwd, password.length() );
+		System.arraycopy(password.getBytes(), 0, pwd, 0, password.length());
+		sendblock.cc_encrypt(pwd, password.length()); //encript the password
 		
 		byte[] CCcam = {'C','C','c','a','m',0 };
-		SendMsg(6, CCcam );
+		SendMsg(6, CCcam); //But send CCcam\0
 
-	    is.readFully( buf, 0, 20 );
-		recvblock.cc_decrypt(buf,20);
-		if ( Arrays.equals(CCcam, Arrays.copyOf(buf,6) ) ) {
-			//WORKED!!!!
+		byte[] rcvBuf = new byte[20];
+	    is.read(rcvBuf);
+		recvblock.cc_decrypt(rcvBuf, 20); 
+		//received string after decription equals "CCcam"
+		if ( Arrays.equals(CCcam, Arrays.copyOf(rcvBuf,6) ) ) {
+			//CCLine is correct!!!!
 			socket.close();
+			is.close();
+			os.close();
+			return true;
 		}
-
-    } catch(SocketException e) {
-    	System.out.println(e.toString());
     } catch(Exception e) {
     	System.out.println(e.toString());
-      e.printStackTrace();
+    	e.printStackTrace();
     }
+	socket.close();
+	is.close();
+	os.close();
+    return false;
   }
 }
