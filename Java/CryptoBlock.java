@@ -69,5 +69,4 @@ public class CryptoBlock {
 			state = 0xff & (state ^ z);
 		}
 	}
-
 }
