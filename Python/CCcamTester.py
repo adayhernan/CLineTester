@@ -17,7 +17,7 @@ def TestCline(cline):
         return False;
 
     testSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_IP)
-    testSocket.settimeout(30)
+    testSocket.settimeout(30) #timeout of 30 seconds
 
     host = match.group(1)
     port = int(match.group(2))
@@ -32,7 +32,7 @@ def TestCline(cline):
 
         try:
             userArray = GetPaddedUsername(username)
-            sendcount = SendMessage(userArray, len(userArray), testSocket)
+            sendcount = SendMessage(userArray, len(userArray), testSocket) #Send the username
             
             passwordArray = GetPaddedPassword(password)
             sendblock.Encrypt(passwordArray, len(passwordArray)) #We encript the password
