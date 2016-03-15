@@ -4,7 +4,7 @@
 Scripts for testing that a Cline works or not. Currently in Java, C# and Python.
 
 I made them as some people host testing cline websites and reject to share their source code.
-With them you can program your own testing website/software and be sure that nobody is stealing your lines :)
+With this scripts you can program your own testing website/software and be sure that nobody is stealing your lines :)
 
 If you need more info, here are some links that helped me to do it:
 
