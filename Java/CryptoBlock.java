@@ -1,3 +1,5 @@
+//Created by Dagger -- https://github.com/DaggerES
+
 public class CryptoBlock {
 
 	int[] keytable;
