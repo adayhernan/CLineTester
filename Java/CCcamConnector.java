@@ -1,3 +1,5 @@
+//Created by Dagger -- https://github.com/DaggerES
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -82,7 +84,7 @@ public class CCcamConnector {
 		byte[] rcvBuf = new byte[20];
 	    	is.read(rcvBuf);
 		recvblock.cc_decrypt(rcvBuf, 20); 
-		//received string after decription equals "CCcam"
+		//check if received string after decription equals "CCcam"
 		if ( Arrays.equals(CCcam, Arrays.copyOf(rcvBuf,6) ) ) {
 			//CCLine is correct!!!!
 			socket.close();
