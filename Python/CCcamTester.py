@@ -48,7 +48,6 @@ def TestCline(cline):
             if recvCount > 0:
                 recvblock.Decrypt(receivedBytes, 20)
                 if (receivedBytes.decode("ascii").rstrip('\0') == "CCcam"):
-                    testSocket.close()
                     print "SUCCESS! working cline: " + cline
                     returnValue = True
                 else:
