@@ -1,12 +1,18 @@
 # CLine tester scripts
-*Also called Cline, CCcline, CCcam, Camd*
+*Also called Cline, CCcline, CCcam and Camd*
 
 Scripts for testing that a Cline works or not. Currently in Java, C# and Python.
 
 I made them as some people host line-testing websites and reject to share their source code.
-With those scripts you can program your own testing website/software and **be sure that nobody steals your lines** :)
+With those scripts you can program your own testing website/software and be sure that **nobody steals your lines** :)
 
-If you need more info, here are some links that helped me to do it:
+###Check this repository for a Nline (newcamd) tester: https://github.com/DaggerES/NLineTester
+
+Please, share your code!!!!
+
+---
+
+Links that helped me to do it:
 
 1- Some unfinished script in PHP:
   http://pastebin.com/apdmS1Be
@@ -24,7 +30,3 @@ If you need more info, here are some links that helped me to do it:
 5- Code of CSP
   http://www.infosat.org/forum/viewtopic.php?id=13 and https://code.google.com/archive/p/3color/source/default/source 
   mirror code: https://drive.google.com/open?id=0B86c-awTf5xFQUlycG1nX2xmWXM
-
-Check this repository for a Nline (newcamd) tester: https://github.com/DaggerES/NLineTester
-
-Please, share your code!!!!
