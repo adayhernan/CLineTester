@@ -53,7 +53,7 @@ namespace ConsoleApplication
                 SendMsg(20, userName); //Send username in a padded array of 20 bytes
 
                 byte[] pwd = new byte[password.Length];
-                Array.Copy(GetBytes(password), userName, GetBytes(password).Length);
+                Array.Copy(GetBytes(password), pwd, GetBytes(password).Length);
                 SendBlock.cc_encrypt(pwd, pwd.Length); //encript psw in cripto block
 
                 byte[] cCcam = { Convert.ToByte('C'), Convert.ToByte('C'), Convert.ToByte('c'),
