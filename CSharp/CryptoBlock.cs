@@ -1,4 +1,5 @@
 //Created by Dagger -- https://github.com/DaggerES
+//With the help of ArSi -- https://github.com/arsi-apli
 
 namespace ConsoleApplication
 {
