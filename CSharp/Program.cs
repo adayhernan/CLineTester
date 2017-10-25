@@ -1,4 +1,4 @@
-//Created by Dagger -- https://github.com/DaggerES
+//Created by Dagger -- https://github.com/gavazquez
 //With the help of ArSi -- https://github.com/arsi-apli
 
 using System;

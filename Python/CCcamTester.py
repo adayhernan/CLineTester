@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
-#Created by Dagger -- https://github.com/DaggerES
+#Created by Dagger -- https://github.com/gavazquez
 
 import CriptoBlock
 
