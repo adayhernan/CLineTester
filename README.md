@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal"/></a>
+</p>
+
+---
+
 # CLine tester scripts
 *Also called Cline, CCcline, CCcam and Camd*
 
@@ -30,3 +36,10 @@ Links that helped me to do it:
 5- Code of CSP
   http://www.infosat.org/forum/viewtopic.php?id=13 and https://code.google.com/archive/p/3color/source/default/source 
   mirror code: https://drive.google.com/open?id=0B86c-awTf5xFQUlycG1nX2xmWXM
+
+---
+
+<p align="center">
+  <a href="mailto:gavazquez@gmail.com"><img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/CLineTester.svg" alt="License" /></a>
+</p>
