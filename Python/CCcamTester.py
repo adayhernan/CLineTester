@@ -20,10 +20,10 @@ def TestCline(cline):
     testSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_IP)
     testSocket.settimeout(30) #timeout of 30 seconds
 
-    host = match.group(1)
+    host = str(match.group(1))
     port = int(match.group(2))
-    username = match.group(3)
-    password = match.group(4)
+    username = str(match.group(3))
+    password = str(match.group(4))
 
     try:
         ip = socket.gethostbyname(host)
